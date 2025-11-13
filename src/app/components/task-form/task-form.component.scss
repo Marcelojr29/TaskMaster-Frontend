@@ -1,0 +1,31 @@
+.full-width {
+  width: 100%;
+}
+
+mat-card {
+  position: sticky;
+  top: 24px;
+}
+
+mat-form-field {
+  margin-bottom: 16px;
+}
+
+button {
+  margin-top: 8px;
+  height: 48px;
+  
+  &:not(:disabled) {
+    background-color: #3f51b5;
+    color: white;
+  }
+  
+  &:disabled {
+    background-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.38);
+  }
+}
+
+mat-form-field.ng-valid .mat-form-field-outline {
+  color: #3f51b5;
+}
