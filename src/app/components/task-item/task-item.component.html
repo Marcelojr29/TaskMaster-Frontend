@@ -1,0 +1,29 @@
+<mat-card [class.completed]="task.completed" class="task-card">
+  <mat-card-content>
+    <div class="task-content">
+      <mat-checkbox
+        [checked]="task.completed"
+        (change)="onToggleComplete()"
+        color="primary">
+      </mat-checkbox>
+      
+      <div class="task-info">
+        <h3 [class.completed-text]="task.completed">{{ task.title }}</h3>
+        <p *ngIf="task.description" [class.completed-text]="task.completed">
+          {{ task.description }}
+        </p>
+        <small class="date-text">
+          Created in: {{ task.createdAt | date:'dd/MM/yyyy HH:mm' }}
+        </small>
+      </div>
+
+      <button 
+        mat-icon-button 
+        color="warn" 
+        (click)="onDelete()"
+        class="delete-btn">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

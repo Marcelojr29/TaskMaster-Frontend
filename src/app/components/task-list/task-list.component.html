@@ -1,0 +1,121 @@
+<div class="task-list-container">
+  <mat-toolbar color="primary" class="app-header">
+    <mat-toolbar-row>
+      <span class="app-title">
+        <mat-icon class="app-icon">checklist</mat-icon>
+        TaskMaster
+      </span>
+      
+      <div class="user-info" *ngIf="currentUser">
+        <span class="welcome-text">Hello, {{ currentUser.name }}!</span>
+        <button 
+          mat-icon-button 
+          [matMenuTriggerFor]="userMenu"
+          class="user-menu-button">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+        
+        <mat-menu #userMenu="matMenu">
+          <div mat-menu-item class="user-menu-header">
+            <div class="user-details">
+              <strong>{{ currentUser.name }}</strong>
+              <small>{{ currentUser.email }}</small>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Sair</span>
+          </button>
+        </mat-menu>
+      </div>
+      
+      <span class="stats">
+        <span class="stat-item">
+          <mat-icon>list</mat-icon>
+          {{ getStats().total }}
+        </span>
+        <span class="stat-item">
+          <mat-icon>schedule</mat-icon>
+          {{ getStats().pending }}
+        </span>
+        <span class="stat-item">
+          <mat-icon>check_circle</mat-icon>
+          {{ getStats().completed }}
+        </span>
+      </span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="main-content">
+    <div class="sidebar">
+      <app-task-form (taskCreated)="onCreateTask($event)"></app-task-form>
+    </div>
+
+    <div class="content">
+      <div class="filters-section">
+        <mat-button-toggle-group 
+          [value]="filter" 
+          (change)="onFilterChange($event.value)"
+          class="filter-buttons">
+          <mat-button-toggle value="all">
+            <mat-icon>all_inclusive</mat-icon>
+            All
+          </mat-button-toggle>
+          <mat-button-toggle value="pending">
+            <mat-icon>schedule</mat-icon>
+            Pending
+          </mat-button-toggle>
+          <mat-button-toggle value="completed">
+            <mat-icon>check_circle</mat-icon>
+            Completed
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search Tasks</mat-label>
+          <input 
+            matInput 
+            [(ngModel)]="searchTerm" 
+            (ngModelChange)="onSearchChange($event)"
+            placeholder="Enter search...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading tasks...</p>
+      </div>
+
+      <div *ngIf="!isLoading" class="tasks-container">
+        <div *ngIf="filteredTasks.length === 0" class="empty-state">
+          <mat-icon class="empty-icon">inbox</mat-icon>
+          <h3>
+            {{
+              searchTerm 
+                ? 'No tasks found' 
+                : filter === 'all' 
+                  ? 'No tasks registered' 
+                  : filter === 'pending' 
+                    ? 'No pending tasks' 
+                    : 'No tasks completed'
+            }}
+          </h3>
+          <p *ngIf="!searchTerm && filter === 'all'">
+            Click on the form to the side to create your first task!
+          </p>
+        </div>
+
+        <div *ngIf="filteredTasks.length > 0" class="tasks-grid">
+          <app-task-item
+            *ngFor="let task of filteredTasks"
+            [task]="task"
+            (taskUpdated)="onTaskUpdated($event)"
+            (taskDeleted)="onTaskDeleted($event)">
+          </app-task-item>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
