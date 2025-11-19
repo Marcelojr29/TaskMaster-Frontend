@@ -40,9 +40,13 @@
           <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-          <mat-hint>The password must contain uppercase letters, lowercase and numbers</mat-hint>
           <mat-error>{{ getPasswordErrors() }}</mat-error>
         </mat-form-field>
+
+        <div class="password-hint" *ngIf="registerForm.get('password')?.touched">
+          <mat-icon>info</mat-icon>
+          The password must contain uppercase letters, lowercase and numbers.
+        </div>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Confirm password</mat-label>
