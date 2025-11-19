@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Task, CreateTask, UpdateTask } from '../interfaces/task.interface';
 import { GenericHttpService } from './generic-http.service';
@@ -8,7 +7,6 @@ import { GenericHttpService } from './generic-http.service';
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = 'http://localhost:3000/tasks';
 
   constructor(private _service: GenericHttpService<Task>) { }
 
@@ -17,7 +15,7 @@ export class TaskService {
   }
 
   getTasksByStatus(completed: boolean): Observable<Task[]> {
-    return this._service.get('tasks', { completed });
+    return this._service.get('tasks', undefined, { completed: completed.toString() });
   }
 
   getTaskById(id: string): Observable<Task> {

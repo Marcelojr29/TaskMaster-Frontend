@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, delay, map, tap, throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.prod';
 import { CustomHttpParamEncoder } from '../helpers/customHttpParamEncoder';
 
 @Injectable({
@@ -22,32 +22,31 @@ export class GenericHttpService<T> {
     return params;
   }
 
-  get(endpoint: string, args?: any): Observable<any> {
-    const params = this.convertObjToHttpParams(args);
-    const url = `${this.apiUrl}/${endpoint}`;
-    
-    return this.http.get<any>(url, { params }).pipe(
-      tap({
-        next: val => { },
-        error: error => {
-          console.log('on error', error.message);
-        },
-        complete: () => { }
-      }),
-      catchError(this.handleError)
-    );
+  get(endpoint: string, id?: string, query?: any): Observable<any> {
+    let url = `${this.apiUrl}/${endpoint}`;
+
+    if (id) {
+      url += `/${id}`;
+    }
+
+    const params = this.convertObjToHttpParams(query);
+
+    return this.http.get<any>(url, { params })
+      .pipe(
+        tap({
+          next: val => {},
+          error: error => {
+            console.log('on error', error.message);
+          },
+          complete: () => {}
+        }),
+        catchError(this.handleError)
+      );
   }
 
   getById(endpoint: string, id: string): Observable<any> {
     const url = `${this.apiUrl}/${endpoint}/${id}`;
     return this.http.get<any>(url).pipe(
-      tap({
-        next: val => { },
-        error: error => {
-          console.log('on error', error.message);
-        },
-        complete: () => { }
-      }),
       catchError(this.handleError)
     );
   }
